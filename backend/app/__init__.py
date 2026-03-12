@@ -1,0 +1,8 @@
+# --- FILE: app/__init__.py ---
+"""TELAX backend application package."""
+
+from .main import create_app
+from .models import db
+
+__all__ = ['create_app', 'db']
+

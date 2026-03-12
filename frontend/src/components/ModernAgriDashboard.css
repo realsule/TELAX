@@ -1,0 +1,141 @@
+.agri-page {
+  min-height: 100vh;
+  padding: 2.5rem 1.75rem 3rem;
+  background: radial-gradient(circle at top, #0f172a 0, #020617 60%);
+  color: #e5e7eb;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.agri-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.agri-kicker {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #a5b4fc;
+}
+
+.agri-title {
+  font-size: 2.4rem;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.agri-subtitle {
+  margin: 0.4rem 0 0;
+  max-width: 40rem;
+  font-size: 0.95rem;
+  color: #cbd5f5;
+}
+
+.agri-section {
+  margin-bottom: 2.6rem;
+}
+
+.agri-section__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.4rem;
+}
+
+.agri-section__header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.agri-section__header p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: #d1d5db;
+}
+
+.field-input {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  padding: 0.55rem 0.9rem;
+  font-size: 0.9rem;
+  background: rgba(15, 23, 42, 0.7);
+  color: #e5e7eb;
+  outline: none;
+}
+
+.field-input:focus-visible {
+  border-color: #a5b4fc;
+  box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.5);
+}
+
+.agri-community-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.2rem;
+}
+
+.glass-card {
+  position: relative;
+  padding: 1.3rem 1.4rem 1.3rem;
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.7), rgba(30, 64, 175, 0.35));
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.community-card__badge {
+  display: inline-flex;
+  padding: 0.15rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  background: rgba(15, 118, 110, 0.22);
+  color: #a5f3fc;
+  border: 1px solid rgba(45, 212, 191, 0.7);
+  margin-bottom: 0.6rem;
+}
+
+.community-card__title {
+  margin: 0 0 0.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.community-card__text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+.agri-market-grid {
+  display: grid;
+  gap: 1.3rem;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+}
+
+@media (min-width: 960px) {
+  .agri-page {
+    padding-top: 3.25rem;
+  }
+
+  .agri-hero {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+

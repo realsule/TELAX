@@ -1,0 +1,308 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* TLX Cohort 25 Agricultural Theme */
+@layer base {
+  :root {
+    --forest-500: 61 139 61;
+    --terracotta-500: 210 116 56;
+    --soil-900: 58 44 31;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: linear-gradient(135deg, #f0f9f0 0%, #fbe9e4 50%, #fef3c7 100%);
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .dark body {
+    background: linear-gradient(135deg, #0f2e0f 0%, #1e4d1e 50%, #1e4d1e 100%);
+  }
+}
+
+@layer components {
+  /* Glassmorphism Card Style - Modern Agri Dashboard Standard */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark .glass-card {
+    background: rgba(15, 46, 15, 0.8);
+    border: 1px solid rgba(30, 77, 30, 0.2);
+  }
+
+  .glass-card-hover {
+    transition: all 0.3s ease;
+  }
+
+  .glass-card-hover:hover {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: scale(1.02);
+  }
+
+  .dark .glass-card-hover:hover {
+    background: rgba(15, 46, 15, 0.9);
+  }
+
+  /* Payment on Delivery Badge */
+  .pod-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #dcf2dc;
+    color: #2e6b2e;
+    border: 1px solid #bae5ba;
+  }
+
+  .dark .pod-badge {
+    background: #1e4d1e;
+    color: #bae5ba;
+    border-color: #2e6b2e;
+  }
+
+  /* Primary Button - TLX Green Theme */
+  .btn-primary {
+    background: linear-gradient(135deg, #3d8b3d 0%, #2e6b2e 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #2e6b2e 0%, #1e4d1e 100%);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(-2px);
+  }
+
+  .btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #3d8b3d;
+  }
+
+  /* Secondary Button - TLX Red Theme */
+  .btn-secondary {
+    background: linear-gradient(135deg, #d27456 0%, #b45c44 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover {
+    background: linear-gradient(135deg, #b45c44 0%, #8b4537 100%);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #d27456;
+  }
+
+  /* Input Fields */
+  .input-field {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #bae5ba;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(4px);
+    color: #1e4d1e;
+    transition: all 0.2s ease;
+  }
+
+  .input-field::placeholder {
+    color: #5cb85c;
+  }
+
+  .input-field:focus {
+    outline: none;
+    border-color: #3d8b3d;
+    box-shadow: 0 0 0 2px rgba(61, 139, 61, 0.2);
+    background: white;
+  }
+
+  .dark .input-field {
+    border-color: #2e6b2e;
+    background: rgba(15, 46, 15, 0.5);
+    color: #dcf2dc;
+  }
+
+  .dark .input-field::placeholder {
+    color: #8dd48d;
+  }
+
+  .dark .input-field:focus {
+    background: #0f2e0f;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #bae5ba;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(4px);
+    color: #1e4d1e;
+    transition: all 0.2s ease;
+  }
+
+  .form-input::placeholder {
+    color: #5cb85c;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #3d8b3d;
+    box-shadow: 0 0 0 2px rgba(61, 139, 61, 0.2);
+    background: white;
+  }
+
+  .dark .form-input {
+    border-color: #2e6b2e;
+    background: rgba(15, 46, 15, 0.5);
+    color: #dcf2dc;
+  }
+
+  .dark .form-input::placeholder {
+    color: #8dd48d;
+  }
+
+  .dark .form-input:focus {
+    background: #0f2e0f;
+  }
+
+  /* Navigation */
+  .nav-link {
+    color: #2e6b2e;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+
+  .dark .nav-link {
+    color: #8dd48d;
+  }
+
+  .nav-link:hover {
+    color: #1e4d1e;
+  }
+
+  .dark .nav-link:hover {
+    color: #dcf2dc;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #3d8b3d 0%, #d27456 100%);
+    transition: all 0.3s ease;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  /* Loading States */
+  .skeleton {
+    background: linear-gradient(90deg, #dcf2dc 0%, #bae5ba 50%, #dcf2dc 100%);
+    border-radius: 0.75rem;
+    animation: shimmer 2s infinite;
+  }
+
+  .dark .skeleton {
+    background: linear-gradient(90deg, #1e4d1e 0%, #2e6b2e 50%, #1e4d1e 100%);
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Empty States */
+  .empty-state {
+    text-align: center;
+    padding: 3rem 0;
+  }
+
+  .empty-state-icon {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1rem;
+    color: #8dd48d;
+  }
+
+  .dark .empty-state-icon {
+    color: #2e6b2e;
+  }
+
+  .empty-state-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e4d1e;
+    margin-bottom: 0.5rem;
+  }
+
+  .dark .empty-state-title {
+    color: #dcf2dc;
+  }
+
+  .empty-state-text {
+    color: #5cb85c;
+    max-width: 28rem;
+    margin: 0 auto;
+  }
+
+  .dark .empty-state-text {
+    color: #8dd48d;
+  }
+}
+
+@layer utilities {
+  .text-gradient-tlx {
+    background: linear-gradient(135deg, #3d8b3d 0%, #d27456 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-tlx-pattern {
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(61, 139, 61, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(210, 116, 86, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(250, 204, 21, 0.05) 0%, transparent 50%);
+  }
+}
