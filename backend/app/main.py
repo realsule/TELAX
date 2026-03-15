@@ -4,7 +4,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from app.models import db
-from app.routes.auth import auth_bp
+from app.routes.auth import auth_bp, interest_bp
 from datetime import timedelta
 
 def create_app(config_object=None):
@@ -58,11 +58,35 @@ def configure_app(app):
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
     app.config['JWT_ALGORITHM'] = 'HS256'
     
-    # CORS configuration
-    app.config['CORS_ORIGINS'] = os.environ.get('CORS_ORIGINS', 'http://localhost:5173,http://localhost:5174').split(',')
+    # CORS configuration - Allow specific local development origins
+    if app.config.get('DEBUG', False):
+        # Development: Allow specific local origins with full preflight support
+        allowed_origins = [
+            'http://localhost:5173',
+            'http://localhost:5174', 
+            'http://localhost:5175',
+            'http://127.0.0.1:5173',
+            'http://127.0.0.1:5174',
+            'http://127.0.0.1:5175'
+        ]
+        CORS(app, 
+             origins=allowed_origins,
+             supports_credentials=True,
+             allow_headers=['Content-Type', 'Authorization', 'X-Requested-With'],
+             methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+             expose_headers=['Content-Type', 'Authorization'])
+    else:
+        # Production: Restrict to specific origins
+        cors_origins = app.config.get('CORS_ORIGINS', ['http://localhost:5173'])
+        CORS(app, 
+             origins=cors_origins,
+             supports_credentials=True,
+             allow_headers=['Content-Type', 'Authorization', 'X-Requested-With'],
+             methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+             expose_headers=['Content-Type', 'Authorization'])
     
     # Development/Production settings
-    app.config['DEBUG'] = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    app.config['DEBUG'] = os.environ.get('FLASK_DEBUG', 'True').lower() == 'true'
     app.config['TESTING'] = os.environ.get('FLASK_TESTING', 'False').lower() == 'true'
 
 def initialize_extensions(app):
@@ -71,14 +95,6 @@ def initialize_extensions(app):
     """
     # Initialize SQLAlchemy
     db.init_app(app)
-    
-    # Initialize CORS
-    cors_origins = app.config.get('CORS_ORIGINS', ['http://localhost:5173'])
-    CORS(app, 
-         origins=cors_origins,
-         supports_credentials=True,
-         allow_headers=['Content-Type', 'Authorization'],
-         methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
     
     # Initialize JWT Manager
     jwt = JWTManager(app)
@@ -109,6 +125,7 @@ def register_blueprints(app):
     Register application blueprints.
     """
     app.register_blueprint(auth_bp)
+    app.register_blueprint(interest_bp)
     
     # Health check endpoint
     @app.route('/health', methods=['GET'])
@@ -165,7 +182,7 @@ if __name__ == '__main__':
     # Development server configuration
     debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
     port = int(os.environ.get('PORT', 5000))
-    host = os.environ.get('HOST', '0.0.0.0')
+    host = os.environ.get('HOST', 'localhost')  # Explicitly listen on localhost
     
     print(f"🌱 TELAX Agricultural Marketplace API")
     print(f"🚀 Starting server on http://{host}:{port}")

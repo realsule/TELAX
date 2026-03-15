@@ -12,6 +12,7 @@ import { Listings } from './pages/Listings'
 import { FarmerDashboard } from './pages/FarmerDashboard'
 import { BuyerDashboard } from './pages/BuyerDashboard'
 import { AdminDashboard } from './pages/AdminDashboard'
+import { AdminLogin } from './pages/AdminLogin'
 import { Profile } from './pages/Profile'
 import { ThemeToggle } from './components/ThemeToggle'
 
@@ -46,6 +47,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/listings" element={<Listings />} />
+        <Route path="/admin-secure-portal" element={<AdminLogin />} />
         <Route path="/unauthorized" element={
           <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-forest-50 via-terracotta-50 to-sunlight-50 dark:from-forest-900 dark:via-soil-900 dark:to-terracotta-900">
             <div className="card-organic max-w-md mx-auto text-center">

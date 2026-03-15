@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { Sprout, Users, ShoppingBag, TrendingUp, Star, ArrowRight, Sun, Cloud, Droplets } from 'lucide-react'
+import { Sprout, Users, ShoppingBag, TrendingUp, Star, ArrowRight, Sun, Cloud, Droplets, Flame } from 'lucide-react'
 import { ListingCard } from '../components/ListingCard'
 import { verifyToken } from '../store/authSlice'
 
@@ -16,12 +16,54 @@ export function Home() {
     happyCustomers: 0,
     avgRating: 0
   })
+  const [interestCount, setInterestCount] = useState(142)
+  const [isLoadingInterest, setIsLoadingInterest] = useState(false)
+
+  // API functions for interest counter
+  const fetchInterestCount = async () => {
+    try {
+      const response = await fetch('/api/interest/count')
+      const data = await response.json()
+      if (response.ok) {
+        setInterestCount(data.count)
+      }
+    } catch (error) {
+      console.error('Failed to fetch interest count:', error)
+    }
+  }
+
+  const incrementInterestCount = async () => {
+    setIsLoadingInterest(true)
+    try {
+      const response = await fetch('/api/interest/count', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      const data = await response.json()
+      if (response.ok) {
+        setInterestCount(data.count)
+        // Redirect to register page after incrementing
+        window.location.href = '/register'
+      }
+    } catch (error) {
+      console.error('Failed to increment interest count:', error)
+      // Still redirect even if API fails
+      window.location.href = '/register'
+    } finally {
+      setIsLoadingInterest(false)
+    }
+  }
 
   useEffect(() => {
     // Verify token if authenticated
     if (isAuthenticated) {
       dispatch(verifyToken())
     }
+
+    // Fetch interest count
+    fetchInterestCount()
 
     // Load featured listings (mock data for now)
     setFeaturedListings([
@@ -34,7 +76,11 @@ export function Home() {
         farmer: 'John\'s Organic Farm',
         image: '/api/placeholder/300/200',
         rating: 4.8,
-        category: 'vegetables'
+        reviews: 124,
+        category: 'vegetables',
+        location: 'Kibra, Nairobi',
+        featured: true,
+        isOrganic: true
       },
       {
         id: 2,
@@ -45,7 +91,11 @@ export function Home() {
         farmer: 'Sunny Side Farm',
         image: '/api/placeholder/300/200',
         rating: 4.9,
-        category: 'dairy'
+        reviews: 89,
+        category: 'dairy',
+        location: 'Kawangware, Nairobi',
+        featured: false,
+        isOrganic: true
       },
       {
         id: 3,
@@ -56,7 +106,11 @@ export function Home() {
         farmer: 'Meadow Sweet Apiary',
         image: '/api/placeholder/300/200',
         rating: 5.0,
-        category: 'pantry'
+        reviews: 67,
+        category: 'pantry',
+        location: 'Langata, Nairobi',
+        featured: false,
+        isOrganic: true
       }
     ])
 
@@ -114,13 +168,32 @@ export function Home() {
               </>
             ) : (
               <>
-                <Link 
-                  to="/register"
-                  className="btn-primary text-lg px-8 py-4"
+                {/* Prominent Register Button with Live Counter */}
+                <button
+                  onClick={incrementInterestCount}
+                  disabled={isLoadingInterest}
+                  className="relative group bg-gradient-to-r from-forest-500 to-terracotta-500 hover:from-forest-600 hover:to-terracotta-600 text-white text-lg px-8 py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-2 border-white/20 backdrop-blur-sm"
                 >
-                  Get Started
-                  <Sprout className="ml-2 w-5 h-5" />
-                </Link>
+                  <div className="flex items-center gap-3">
+                    {isLoadingInterest ? (
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                      <Sprout className="w-6 h-6" />
+                    )}
+                    <span>Register if Interested</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </div>
+                  
+                  {/* Live Counter Badge */}
+                  <div className="absolute -top-3 -right-3 bg-red-500 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                    <Flame className="w-3 h-3" />
+                    <span>{interestCount} interested</span>
+                  </div>
+                  
+                  {/* Glassmorphism overlay effect */}
+                  <div className="absolute inset-0 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors duration-300"></div>
+                </button>
+                
                 <Link 
                   to="/listings"
                   className="btn-accent text-lg px-8 py-4"
@@ -131,6 +204,18 @@ export function Home() {
               </>
             )}
           </div>
+          
+          {/* Interest Count Display Below Button */}
+          {!isAuthenticated && (
+            <div className="mt-6 text-center">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-forest-800/80 backdrop-blur-sm rounded-full border border-forest-200 dark:border-forest-700">
+                <Flame className="w-4 h-4 text-orange-500" />
+                <span className="text-sm font-medium text-forest-700 dark:text-forest-300">
+                  🔥 {interestCount} people have shown interest!
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -183,9 +268,9 @@ export function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredListings.map((listing, index) => (
-              <div key={listing.id} className="scroll-grow" style={{ animationDelay: `${index * 0.1}s` }}>
-                <ListingCard listing={listing} />
+            {featuredListings.map((product, index) => (
+              <div key={product.id} className="scroll-grow" style={{ animationDelay: `${index * 0.1}s` }}>
+                <ListingCard product={product} />
               </div>
             ))}
           </div>

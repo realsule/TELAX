@@ -196,7 +196,7 @@ export function Login() {
             <p className="text-center text-sm text-forest-600 dark:text-forest-300 mb-4">
               Sign in as:
             </p>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
                 className="p-3 text-center rounded-xl border border-forest-200 dark:border-forest-700 hover:border-forest-500 dark:hover:border-forest-500 transition-colors"
@@ -210,13 +210,6 @@ export function Login() {
               >
                 <Sprout className="w-5 h-5 mx-auto mb-1 text-forest-600 dark:text-forest-400" />
                 <span className="text-xs text-forest-600 dark:text-forest-300">Farmer</span>
-              </button>
-              <button
-                type="button"
-                className="p-3 text-center rounded-xl border border-forest-200 dark:border-forest-700 hover:border-forest-500 dark:hover:border-forest-500 transition-colors"
-              >
-                <Leaf className="w-5 h-5 mx-auto mb-1 text-forest-600 dark:text-forest-400" />
-                <span className="text-xs text-forest-600 dark:text-forest-300">Admin</span>
               </button>
             </div>
           </div>

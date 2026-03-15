@@ -410,7 +410,7 @@ export function AdminDashboard() {
         {/* Quick Actions */}
         <div className="mt-8 glass-card p-6">
           <h2 className="text-xl font-bold text-forest-900 dark:text-forest-100 mb-6">Admin Actions</h2>
-          <div className="grid md:grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
             <button className="btn-primary flex items-center justify-center gap-2">
               <Users className="w-5 h-5" />
               Manage Users
@@ -427,6 +427,18 @@ export function AdminDashboard() {
               <Download className="w-5 h-5" />
               Export Data
             </button>
+            <button 
+              onClick={() => window.open('#', '_blank')}
+              className="bg-gradient-to-r from-red-600 to-terracotta-600 hover:from-red-700 hover:to-terracotta-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+            >
+              <Download className="w-5 h-5" />
+              Download Handover Docs
+            </button>
+          </div>
+          <div className="mt-4 p-4 bg-red-50/50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
+            <p className="text-sm text-red-700 dark:text-red-300">
+              <strong>Stage 8 Handover Documentation:</strong> Download complete project documentation for April 6 submission deadline.
+            </p>
           </div>
         </div>
 
