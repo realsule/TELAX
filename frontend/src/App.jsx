@@ -5,9 +5,13 @@ import './App.css'
 import { ProtectedRoute } from './routes/ProtectedRoute'
 import { UserRoles } from './store/authSlice'
 import { ModernAgriDashboard } from './components/ModernAgriDashboard'
+import { Navbar } from './components/Navbar'
 import { Register } from './pages/Register'
 import { Login } from './pages/Login'
 import { Home } from './pages/Home'
+import { About } from './pages/About'
+import { Explore } from './pages/Explore'
+import { Vision } from './pages/Vision'
 import { Listings } from './pages/Listings'
 import { FarmerDashboard } from './pages/FarmerDashboard'
 import { BuyerDashboard } from './pages/BuyerDashboard'
@@ -42,10 +46,16 @@ function App() {
       </div>
 
       <Routes>
+        {/* Navbar */}
+        <Route path="/*" element={<Navbar />} />
+        
         {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/explore" element={<Explore />} />
+        <Route path="/vision" element={<Vision />} />
         <Route path="/listings" element={<Listings />} />
         <Route path="/admin-secure-portal" element={<AdminLogin />} />
         <Route path="/unauthorized" element={

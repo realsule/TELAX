@@ -9,6 +9,7 @@ export function Register() {
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -34,11 +35,11 @@ export function Register() {
 
   const validateStep = () => {
     if (step === 1) {
-      return formData.first_name && formData.last_name && formData.email
-    } else if (step === 2) {
-      return formData.password && formData.confirmPassword && formData.password === formData.confirmPassword
-    } else if (step === 3) {
       return formData.role
+    } else if (step === 2) {
+      return formData.first_name && formData.last_name && formData.username && formData.email && formData.phone && formData.address
+    } else if (step === 3) {
+      return formData.password && formData.confirmPassword && formData.password === formData.confirmPassword
     }
     return false
   }
@@ -70,7 +71,9 @@ export function Register() {
     try {
       const result = await dispatch(registerUser(formData))
       if (result.meta.requestStatus === 'fulfilled') {
-        navigate('/')
+        // Redirect to role-based dashboard
+        const dashboardPath = formData.role === 'farmer' ? '/farmer' : '/school'
+        navigate(dashboardPath)
       } else {
         setError(result.payload || 'Registration failed')
       }
@@ -135,9 +138,9 @@ export function Register() {
               ))}
             </div>
             <div className="flex justify-between mt-2 text-xs text-forest-600 dark:text-forest-300">
+              <span>Role</span>
               <span>Basic Info</span>
               <span>Security</span>
-              <span>Role</span>
             </div>
           </div>
 
@@ -150,8 +153,137 @@ export function Register() {
 
           {/* Multi-step Form */}
           <form onSubmit={handleSubmit}>
-            {/* Step 1: Basic Information */}
+            {/* Step 1: Role Selection */}
             {step === 1 && (
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-forest-700 dark:text-forest-300 mb-4">
+                    I want to join as:
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Buyer Card */}
+                    <div
+                      onClick={() => setFormData({...formData, role: 'buyer'})}
+                      className={`relative p-6 border-2 rounded-xl cursor-pointer transition-all duration-200 transform hover:scale-[1.02] ${
+                        formData.role === 'buyer'
+                          ? 'border-green-500 bg-green-50 dark:bg-green-900/20 shadow-lg'
+                          : 'border-forest-200 dark:border-forest-700 hover:border-forest-500 bg-white dark:bg-forest-800'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="role"
+                        value="buyer"
+                        checked={formData.role === 'buyer'}
+                        onChange={handleChange}
+                        className="sr-only"
+                      />
+                      <div className="text-center">
+                        <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${
+                          formData.role === 'buyer'
+                            ? 'bg-green-500 text-white'
+                            : 'bg-forest-100 dark:bg-forest-700 text-forest-600 dark:text-forest-400'
+                        }`}>
+                          <User className="w-8 h-8" />
+                        </div>
+                        <h3 className={`text-lg font-semibold mb-2 ${
+                          formData.role === 'buyer'
+                            ? 'text-green-800 dark:text-green-200'
+                            : 'text-forest-900 dark:text-forest-100'
+                        }`}>
+                          Buyer
+                        </h3>
+                        <p className={`text-sm ${
+                          formData.role === 'buyer'
+                            ? 'text-green-700 dark:text-green-300'
+                            : 'text-forest-600 dark:text-forest-300'
+                        }`}>
+                          I want to purchase fresh produce
+                        </p>
+                      </div>
+                      {formData.role === 'buyer' && (
+                        <div className="absolute top-2 right-2">
+                          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Farmer Card */}
+                    <div
+                      onClick={() => setFormData({...formData, role: 'farmer'})}
+                      className={`relative p-6 border-2 rounded-xl cursor-pointer transition-all duration-200 transform hover:scale-[1.02] ${
+                        formData.role === 'farmer'
+                          ? 'border-green-500 bg-green-50 dark:bg-green-900/20 shadow-lg'
+                          : 'border-forest-200 dark:border-forest-700 hover:border-forest-500 bg-white dark:bg-forest-800'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="role"
+                        value="farmer"
+                        checked={formData.role === 'farmer'}
+                        onChange={handleChange}
+                        className="sr-only"
+                      />
+                      <div className="text-center">
+                        <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${
+                          formData.role === 'farmer'
+                            ? 'bg-green-500 text-white'
+                            : 'bg-forest-100 dark:bg-forest-700 text-forest-600 dark:text-forest-400'
+                        }`}>
+                          <Sprout className="w-8 h-8" />
+                        </div>
+                        <h3 className={`text-lg font-semibold mb-2 ${
+                          formData.role === 'farmer'
+                            ? 'text-green-800 dark:text-green-200'
+                            : 'text-forest-900 dark:text-forest-100'
+                        }`}>
+                          Farmer
+                        </h3>
+                        <p className={`text-sm ${
+                          formData.role === 'farmer'
+                            ? 'text-green-700 dark:text-green-300'
+                            : 'text-forest-600 dark:text-forest-300'
+                        }`}>
+                          I want to list and sell my products
+                        </p>
+                      </div>
+                      {formData.role === 'farmer' && (
+                        <div className="absolute top-2 right-2">
+                          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Administrator Option (Compact) */}
+                  <div className="mt-4">
+                    <label className="flex items-center p-3 border border-forest-200 dark:border-forest-700 rounded-lg cursor-pointer hover:border-forest-500 transition-colors">
+                      <input
+                        type="radio"
+                        name="role"
+                        value="super_admin"
+                        checked={formData.role === 'super_admin'}
+                        onChange={handleChange}
+                        className="mr-3"
+                      />
+                      <div className="flex items-center flex-1">
+                        <Building className="w-6 h-6 text-forest-600 dark:text-forest-400 mr-3" />
+                        <div>
+                          <h3 className="text-sm font-medium text-forest-900 dark:text-forest-100">Administrator</h3>
+                          <p className="text-xs text-forest-600 dark:text-forest-300">
+                            Manage the platform (requires approval)
+                          </p>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step 2: Basic Information */}
+            {step === 2 && (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -180,6 +312,26 @@ export function Register() {
                       required
                       className="form-input"
                       placeholder="Last name"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-forest-700 dark:text-forest-300 mb-2">
+                    Username
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <User className="h-5 w-5 text-forest-400" />
+                    </div>
+                    <input
+                      type="text"
+                      name="username"
+                      value={formData.username}
+                      onChange={handleChange}
+                      required
+                      className="form-input pl-10"
+                      placeholder="Choose a username"
                     />
                   </div>
                 </div>
@@ -217,6 +369,7 @@ export function Register() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
+                      required
                       className="form-input pl-10"
                       placeholder="Enter your phone number"
                     />
@@ -236,6 +389,7 @@ export function Register() {
                       name="address"
                       value={formData.address}
                       onChange={handleChange}
+                      required
                       className="form-input pl-10"
                       placeholder="Enter your address"
                     />
@@ -244,8 +398,8 @@ export function Register() {
               </div>
             )}
 
-            {/* Step 2: Security */}
-            {step === 2 && (
+            {/* Step 3: Security */}
+            {step === 3 && (
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-forest-700 dark:text-forest-300 mb-2">
@@ -315,78 +469,6 @@ export function Register() {
                       Passwords do not match
                     </p>
                   )}
-                </div>
-              </div>
-            )}
-
-            {/* Step 3: Role Selection */}
-            {step === 3 && (
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-forest-700 dark:text-forest-300 mb-4">
-                    I want to join as:
-                  </label>
-                  <div className="space-y-3">
-                    <label className="flex items-center p-4 border border-forest-200 dark:border-forest-700 rounded-xl cursor-pointer hover:border-forest-500 transition-colors">
-                      <input
-                        type="radio"
-                        name="role"
-                        value="buyer"
-                        checked={formData.role === 'buyer'}
-                        onChange={handleChange}
-                        className="mr-3"
-                      />
-                      <div className="flex items-center flex-1">
-                        <User className="w-8 h-8 text-forest-600 dark:text-forest-400 mr-3" />
-                        <div>
-                          <h3 className="font-medium text-forest-900 dark:text-forest-100">Buyer</h3>
-                          <p className="text-sm text-forest-600 dark:text-forest-300">
-                            Purchase fresh produce from local farms
-                          </p>
-                        </div>
-                      </div>
-                    </label>
-
-                    <label className="flex items-center p-4 border border-forest-200 dark:border-forest-700 rounded-xl cursor-pointer hover:border-forest-500 transition-colors">
-                      <input
-                        type="radio"
-                        name="role"
-                        value="farmer"
-                        checked={formData.role === 'farmer'}
-                        onChange={handleChange}
-                        className="mr-3"
-                      />
-                      <div className="flex items-center flex-1">
-                        <Sprout className="w-8 h-8 text-forest-600 dark:text-forest-400 mr-3" />
-                        <div>
-                          <h3 className="font-medium text-forest-900 dark:text-forest-100">Farmer</h3>
-                          <p className="text-sm text-forest-600 dark:text-forest-300">
-                            Sell your farm products to the community
-                          </p>
-                        </div>
-                      </div>
-                    </label>
-
-                    <label className="flex items-center p-4 border border-forest-200 dark:border-forest-700 rounded-xl cursor-pointer hover:border-forest-500 transition-colors">
-                      <input
-                        type="radio"
-                        name="role"
-                        value="super_admin"
-                        checked={formData.role === 'super_admin'}
-                        onChange={handleChange}
-                        className="mr-3"
-                      />
-                      <div className="flex items-center flex-1">
-                        <Building className="w-8 h-8 text-forest-600 dark:text-forest-400 mr-3" />
-                        <div>
-                          <h3 className="font-medium text-forest-900 dark:text-forest-100">Administrator</h3>
-                          <p className="text-sm text-forest-600 dark:text-forest-300">
-                            Manage the platform (requires approval)
-                          </p>
-                        </div>
-                      </div>
-                    </label>
-                  </div>
                 </div>
               </div>
             )}
