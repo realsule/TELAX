@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from app.models import db
 from app.routes.auth import auth_bp, interest_bp
+from config import get_config
 from datetime import timedelta
 
 def create_app(config_object=None):
@@ -22,8 +23,9 @@ def create_app(config_object=None):
             # Handle configuration object
             app.config.from_object(config_object)
     else:
-        # Default configuration
-        configure_app(app)
+        # Use environment-based configuration
+        config = get_config()
+        app.config.from_object(config)
     
     # Initialize extensions
     initialize_extensions(app)
@@ -175,7 +177,7 @@ def register_error_handlers(app):
         app.logger.error(f"Unhandled exception: {error}")
         return {'error': 'An unexpected error occurred'}, 500
 
-# Create the application instance
+# Create app instance with environment-based configuration
 app = create_app()
 
 if __name__ == '__main__':
