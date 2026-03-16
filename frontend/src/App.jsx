@@ -15,10 +15,14 @@ import { Vision } from './pages/Vision'
 import { Listings } from './pages/Listings'
 import { FarmerDashboard } from './pages/FarmerDashboard'
 import { BuyerDashboard } from './pages/BuyerDashboard'
+import { InstitutionDashboard } from './pages/InstitutionDashboard'
+import { SuperAdminPanel } from './pages/SuperAdminPanel'
 import { AdminDashboard } from './pages/AdminDashboard'
 import { AdminLogin } from './pages/AdminLogin'
 import { Profile } from './pages/Profile'
 import { ThemeToggle } from './components/ThemeToggle'
+import { FarmGallery } from './pages/FarmGallery'
+import { OriginPage } from './pages/OriginPage'
 
 function App() {
   const [isDark, setIsDark] = useState(() => {
@@ -56,6 +60,8 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/vision" element={<Vision />} />
+        <Route path="/origin" element={<OriginPage />} />
+        <Route path="/farm-gallery" element={<FarmGallery />} />
         <Route path="/listings" element={<Listings />} />
         <Route path="/admin-secure-portal" element={<AdminLogin />} />
         <Route path="/unauthorized" element={
@@ -89,9 +95,15 @@ function App() {
           <Route path="/community" element={<BuyerDashboard />} />
         </Route>
 
-        {/* Admin dashboard: System monitoring */}
+        {/* Institution dashboard: Events & Donations Management */}
+        <Route element={<ProtectedRoute allowedRoles={[UserRoles.INSTITUTION]} />}>
+          <Route path="/institution" element={<InstitutionDashboard />} />
+        </Route>
+
+        {/* Super Admin dashboard: System monitoring */}
         <Route element={<ProtectedRoute allowedRoles={[UserRoles.SUPER_ADMIN]} />}>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin-secure-portal" element={<SuperAdminPanel />} />
         </Route>
 
         {/* Legacy dashboard route - redirects based on role */}

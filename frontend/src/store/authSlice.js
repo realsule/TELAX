@@ -5,6 +5,7 @@ export const UserRoles = {
   FARMER: 'farmer',
   BUYER: 'buyer', 
   SUPER_ADMIN: 'super_admin',
+  INSTITUTION: 'institution',
 }
 
 const API_BASE_URL = 'http://localhost:5000/api'

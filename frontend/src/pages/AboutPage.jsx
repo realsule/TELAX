@@ -1,6 +1,7 @@
 // --- FILE: src/pages/AboutPage.jsx ---
 import { Link } from 'react-router-dom'
 import { Sprout, Leaf, Users, ShoppingBag, BookOpen, Award, TrendingUp, Globe, Heart, Shield, Target, Zap, TreePine } from 'lucide-react'
+import { TeamSection } from '../components/TeamSection'
 
 export function AboutPage() {
   return (
@@ -398,6 +399,9 @@ export function AboutPage() {
           </div>
         </div>
       </div>
+
+      {/* Team Section */}
+      <TeamSection />
     </div>
   )
 }

@@ -448,6 +448,127 @@ export function OriginPage() {
           </div>
         </div>
 
+        {/* Our Journey Section */}
+        <div className="mb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-forest-900 dark:text-forest-100 mb-4">
+              Our Journey
+            </h2>
+            <p className="text-xl text-forest-600 dark:text-forest-300 max-w-3xl mx-auto">
+              The collective effort that brought TELAX from vision to reality
+            </p>
+          </div>
+          
+          <div className="glass-card p-8">
+            <div className="grid md:grid-cols-2 gap-12">
+              <div>
+                <h3 className="text-2xl font-bold text-forest-900 dark:text-forest-100 mb-6">
+                  From Vision to Movement
+                </h3>
+                <div className="space-y-6 text-forest-600 dark:text-forest-300">
+                  <div className="flex items-start gap-4">
+                    <div className="w-8 h-8 bg-forest-100 dark:bg-forest-800 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-forest-600 dark:text-forest-400 font-bold text-sm">1</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-forest-900 dark:text-forest-100 mb-2">
+                        The Spark (2022)
+                      </h4>
+                      <p>
+                        It began with a simple observation: urban communities were disconnected from their food sources, while small farmers struggled to reach local markets. Our founding team saw an opportunity to bridge this gap using technology.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-4">
+                    <div className="w-8 h-8 bg-forest-100 dark:bg-forest-800 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-forest-600 dark:text-forest-400 font-bold text-sm">2</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-forest-900 dark:text-forest-100 mb-2">
+                        Community Building (2023)
+                      </h4>
+                      <p>
+                        We spent months talking to farmers, buyers, and community leaders. These conversations shaped our understanding of real-world challenges and informed every aspect of the TELAX platform design.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-4">
+                    <div className="w-8 h-8 bg-forest-100 dark:bg-forest-800 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-forest-600 dark:text-forest-400 font-bold text-sm">3</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-forest-900 dark:text-forest-100 mb-2">
+                        Platform Launch (2024)
+                      </h4>
+                      <p>
+                        After countless iterations and community feedback, we launched TELAX. What started as a concept became a living platform connecting hundreds of farmers with thousands of urban consumers.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-2xl font-bold text-forest-900 dark:text-forest-100 mb-6">
+                  The Collective Impact
+                </h3>
+                <div className="space-y-6 text-forest-600 dark:text-forest-300">
+                  <div className="p-6 bg-forest-50 dark:bg-forest-800/50 rounded-xl">
+                    <h4 className="font-semibold text-forest-900 dark:text-forest-100 mb-3 flex items-center">
+                      <Users className="w-5 h-5 mr-2 text-forest-600 dark:text-forest-400" />
+                      Community-Driven
+                    </h4>
+                    <p>
+                      Every feature, every design decision, and every improvement has been shaped by real user feedback. TELAX isn't just our platform—it's a community project that continues to evolve with the people who use it.
+                    </p>
+                  </div>
+                  
+                  <div className="p-6 bg-terracotta-50 dark:bg-terracotta-800/50 rounded-xl">
+                    <h4 className="font-semibold text-forest-900 dark:text-forest-100 mb-3 flex items-center">
+                      <Heart className="w-5 h-5 mr-2 text-terracotta-600 dark:text-terracotta-400" />
+                      Passion & Purpose
+                    </h4>
+                    <p>
+                      Our team brings together diverse expertise—from agriculture and technology to community development and education—all united by a shared passion for creating sustainable food systems.
+                    </p>
+                  </div>
+                  
+                  <div className="p-6 bg-sunlight-50 dark:bg-sunlight-800/50 rounded-xl">
+                    <h4 className="font-semibold text-forest-900 dark:text-forest-100 mb-3 flex items-center">
+                      <Target className="w-5 h-5 mr-2 text-sunlight-600 dark:text-sunlight-400" />
+                      Future Forward
+                    </h4>
+                    <p>
+                      This is just the beginning. We're continuously expanding our features, reaching more communities, and exploring new ways to support urban agriculture and food security.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-12 p-6 bg-gradient-to-r from-forest-100 to-terracotta-100 dark:from-forest-800/50 dark:to-terracotta-800/50 rounded-xl text-center">
+              <h4 className="text-xl font-bold text-forest-900 dark:text-forest-100 mb-3">
+                Join Our Journey
+              </h4>
+              <p className="text-forest-600 dark:text-forest-300 mb-6 max-w-2xl mx-auto">
+                Whether you're a farmer, buyer, institution, or simply passionate about sustainable agriculture, there's a place for you in the TELAX community.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Link to="/register" className="btn-primary">
+                  <Users className="w-5 h-5 mr-2" />
+                  Join the Movement
+                </Link>
+                <Link to="/about" className="btn-accent">
+                  <Heart className="w-5 h-5 mr-2" />
+                  Meet the Team
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Join the Movement */}
         <div className="text-center">
           <div className="glass-card p-12 max-w-4xl mx-auto">
@@ -455,8 +576,7 @@ export function OriginPage() {
               Be Part of the Solution
             </h2>
             <p className="text-xl text-forest-600 dark:text-forest-300 mb-8 max-w-2xl mx-auto">
-              Whether you're a farmer looking to reach more customers or a consumer 
-              seeking fresh, local produce, your participation strengthens our entire food ecosystem.
+              Whether you're a farmer looking to reach more customers or a consumer seeking fresh, local produce, your participation strengthens our entire food ecosystem.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/register" className="btn-primary text-lg px-8 py-4">

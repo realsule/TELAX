@@ -1,7 +1,7 @@
 // --- FILE: src/pages/FarmerDashboard.jsx ---
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { 
   Plus, 
   Package, 
@@ -23,6 +23,7 @@ import { EmptyProducts } from '../components/EmptyState'
 
 export function FarmerDashboard() {
   const { user } = useSelector(state => state.auth)
+  const navigate = useNavigate()
   const [stats, setStats] = useState({
     totalListings: 0,
     activeListings: 0,
@@ -41,115 +42,24 @@ export function FarmerDashboard() {
     // Load farmer data
     const loadFarmerData = async () => {
       try {
+        // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000))
         
+        // Initialize with empty data (realistic for new user)
         setStats({
-          totalListings: 12,
-          activeListings: 8,
-          totalOrders: 156,
-          totalRevenue: 3456.78,
-          avgRating: 4.8,
-          pendingOrders: 5
+          totalListings: 0,
+          activeListings: 0,
+          totalOrders: 0,
+          totalRevenue: 0,
+          avgRating: 0,
+          pendingOrders: 0
         })
-
-        setListings([
-          {
-            id: 1,
-            title: 'Organic Tomatoes',
-            description: 'Fresh, vine-ripened organic tomatoes grown with love',
-            price: 4.99,
-            unit: 'kg',
-            quantity: 50,
-            category: 'vegetables',
-            isAvailable: true,
-            views: 234,
-            orders: 45,
-            rating: 4.8,
-            createdAt: new Date('2024-01-15'),
-            image: '/api/placeholder/200/150'
-          },
-          {
-            id: 2,
-            title: 'Fresh Lettuce',
-            description: 'Crisp, fresh lettuce perfect for salads',
-            price: 3.49,
-            unit: 'head',
-            quantity: 30,
-            category: 'vegetables',
-            isAvailable: true,
-            views: 156,
-            orders: 28,
-            rating: 4.6,
-            createdAt: new Date('2024-01-14'),
-            image: '/api/placeholder/200/150'
-          },
-          {
-            id: 3,
-            title: 'Farm Eggs',
-            description: 'Free-range eggs from happy chickens',
-            price: 6.99,
-            unit: 'dozen',
-            quantity: 0,
-            category: 'dairy',
-            isAvailable: false,
-            views: 189,
-            orders: 67,
-            rating: 4.9,
-            createdAt: new Date('2024-01-13'),
-            image: '/api/placeholder/200/150'
-          },
-          {
-            id: 4,
-            title: 'Local Honey',
-            description: 'Pure, raw honey from local wildflowers',
-            price: 12.99,
-            unit: 'jar',
-            quantity: 25,
-            category: 'pantry',
-            isAvailable: true,
-            views: 298,
-            orders: 34,
-            rating: 5.0,
-            createdAt: new Date('2024-01-12'),
-            image: '/api/placeholder/200/150'
-          }
-        ])
-
-        setRecentOrders([
-          {
-            id: 1,
-            customer: 'Springfield Elementary',
-            product: 'Organic Tomatoes',
-            quantity: 10,
-            total: 49.90,
-            status: 'pending',
-            date: new Date('2024-01-20'),
-            paymentMethod: 'pod'
-          },
-          {
-            id: 2,
-            customer: 'Community Kitchen',
-            product: 'Fresh Lettuce',
-            quantity: 5,
-            total: 17.45,
-            status: 'confirmed',
-            date: new Date('2024-01-19'),
-            paymentMethod: 'pod'
-          },
-          {
-            id: 3,
-            customer: 'Local Restaurant',
-            product: 'Local Honey',
-            quantity: 3,
-            total: 38.97,
-            status: 'delivered',
-            date: new Date('2024-01-18'),
-            paymentMethod: 'pod'
-          }
-        ])
-
+        
+        setListings([])
+        setRecentOrders([])
+        
       } catch (error) {
-        console.error('Failed to load farmer dashboard:', error)
+        console.error('Error loading farmer data:', error)
       } finally {
         setIsLoading(false)
       }
@@ -157,6 +67,11 @@ export function FarmerDashboard() {
 
     loadFarmerData()
   }, [])
+
+  const handleAddProduct = () => {
+    // Navigate to add product page
+    navigate('/listings/create')
+  }
 
   const filteredListings = listings.filter(listing => {
     const matchesSearch = listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -369,7 +284,24 @@ export function FarmerDashboard() {
                   ))}
                 </div>
               ) : (
-                <EmptyProducts />
+                <div className="text-center py-12">
+                  <div className="w-24 h-24 bg-forest-100 dark:bg-forest-800 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Package className="w-12 h-12 text-forest-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-forest-900 dark:text-forest-100 mb-3">
+                    Your farm is currently empty
+                  </h3>
+                  <p className="text-forest-600 dark:text-forest-300 mb-8 max-w-md mx-auto">
+                    Add your first product to start selling to the community and connect with local buyers.
+                  </p>
+                  <button 
+                    onClick={handleAddProduct}
+                    className="btn-primary"
+                  >
+                    <Plus className="w-5 h-5 mr-2" />
+                    Add Your First Product
+                  </button>
+                </div>
               )}
             </div>
           </div>

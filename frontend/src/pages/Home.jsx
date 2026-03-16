@@ -152,7 +152,7 @@ export function Home() {
             {isAuthenticated ? (
               <>
                 <Link 
-                  to={user?.role === 'farmer' ? '/farmer' : '/school'}
+                  to={user?.role === 'farmer' ? '/farmer' : user?.role === 'institution' ? '/institution' : '/school'}
                   className="btn-primary text-lg px-8 py-4"
                 >
                   Go to Dashboard
@@ -168,6 +168,19 @@ export function Home() {
               </>
             ) : (
               <>
+                {/* Direct Login for Registered Users */}
+                <div className="w-full text-center mb-4">
+                  <span className="text-forest-600 dark:text-forest-300 text-sm">
+                    Already registered? 
+                  </span>
+                  <Link 
+                    to="/login" 
+                    className="ml-2 text-forest-700 dark:text-forest-200 hover:text-forest-800 dark:hover:text-forest-100 font-medium text-sm underline"
+                  >
+                    Login here
+                  </Link>
+                </div>
+                
                 {/* Prominent Register Button with Live Counter */}
                 <button
                   onClick={incrementInterestCount}

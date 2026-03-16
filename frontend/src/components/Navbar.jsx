@@ -1,7 +1,8 @@
 // --- FILE: src/components/Navbar.jsx ---
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { logout } from '../store/authSlice'
 import { 
   Sprout, 
   ShoppingBag, 
@@ -19,14 +20,17 @@ export function Navbar() {
   const { user, isAuthenticated, isLoading } = useSelector(state => state.auth)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
 
   const handleLogout = async () => {
     setIsLoggingOut(true)
     try {
-      // Dispatch logout action
-      navigate('/login')
+      // Dispatch logout action to clear Redux state
+      dispatch(logout())
+      // Navigate to home page after logout
+      navigate('/')
     } catch (error) {
       console.error('Logout error:', error)
     } finally {
@@ -40,17 +44,50 @@ export function Navbar() {
 
   const getDashboardLink = () => {
     if (!user || !isAuthenticated) return null
-    return user.role === 'farmer' ? '/farmer' : '/school'
+    switch (user.role) {
+      case 'farmer':
+        return '/farmer'
+      case 'buyer':
+        return '/school'
+      case 'institution':
+        return '/institution'
+      case 'super_admin':
+        return '/admin-secure-portal'
+      default:
+        return '/dashboard'
+    }
   }
 
   const getDashboardText = () => {
     if (!user || !isAuthenticated) return null
-    return user.role === 'farmer' ? 'My Farm' : 'My Orders'
+    switch (user.role) {
+      case 'farmer':
+        return 'My Farm'
+      case 'buyer':
+        return 'My Orders'
+      case 'institution':
+        return 'My Institution'
+      case 'super_admin':
+        return 'Admin Panel'
+      default:
+        return 'Dashboard'
+    }
   }
 
   const getDashboardIcon = () => {
     if (!user || !isAuthenticated) return null
-    return user.role === 'farmer' ? Package : ShoppingBag
+    switch (user.role) {
+      case 'farmer':
+        return Package
+      case 'buyer':
+        return ShoppingBag
+      case 'institution':
+        return Heart
+      case 'super_admin':
+        return User
+      default:
+        return Package
+    }
   }
 
   const DashboardIcon = getDashboardIcon()
@@ -75,6 +112,30 @@ export function Navbar() {
             {!isAuthenticated && (
               <>
                 <Link
+                  to="/login"
+                  className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
+                    isActiveRoute('/login')
+                      ? 'text-forest-600 dark:text-forest-300 bg-forest-100 dark:bg-forest-800'
+                      : 'text-forest-700 dark:text-forest-300 hover:text-forest-900 dark:hover:text-forest-100 hover:bg-forest-50 dark:hover:bg-forest-800'
+                  }`}
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Login
+                </Link>
+                
+                <Link
+                  to="/register"
+                  className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
+                    isActiveRoute('/register')
+                      ? 'text-forest-600 dark:text-forest-300 bg-forest-100 dark:bg-forest-800'
+                      : 'text-forest-700 dark:text-forest-300 hover:text-forest-900 dark:hover:text-forest-100 hover:bg-forest-50 dark:hover:bg-forest-800'
+                  }`}
+                >
+                  <Sprout className="w-4 h-4 mr-2" />
+                  Register
+                </Link>
+                
+                <Link
                   to="/about"
                   className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
                     isActiveRoute('/about')
@@ -87,27 +148,15 @@ export function Navbar() {
                 </Link>
                 
                 <Link
-                  to="/explore"
+                  to="/farm-gallery"
                   className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
-                    isActiveRoute('/explore')
+                    isActiveRoute('/farm-gallery')
                       ? 'text-forest-600 dark:text-forest-300 bg-forest-100 dark:bg-forest-800'
                       : 'text-forest-700 dark:text-forest-300 hover:text-forest-900 dark:hover:text-forest-100 hover:bg-forest-50 dark:hover:bg-forest-800'
                   }`}
                 >
-                  <Sprout className="w-4 h-4 mr-2" />
+                  <Heart className="w-4 h-4 mr-2" />
                   Explore
-                </Link>
-
-                <Link
-                  to="/vision"
-                  className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
-                    isActiveRoute('/vision')
-                      ? 'text-forest-600 dark:text-forest-300 bg-forest-100 dark:bg-forest-800'
-                      : 'text-forest-700 dark:text-forest-300 hover:text-forest-900 dark:hover:text-forest-100 hover:bg-forest-50 dark:hover:bg-forest-800'
-                  }`}
-                >
-                  <Lightbulb className="w-4 h-4 mr-2" />
-                  Vision
                 </Link>
               </>
             )}
@@ -143,16 +192,29 @@ export function Navbar() {
                 </Link>
 
                 <Link
-                  to="/explore"
+                  to="/profile"
                   className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
-                    isActiveRoute('/explore')
+                    isActiveRoute('/profile')
                       ? 'text-forest-600 dark:text-forest-300 bg-forest-100 dark:bg-forest-800'
                       : 'text-forest-700 dark:text-forest-300 hover:text-forest-900 dark:hover:text-forest-100 hover:bg-forest-50 dark:hover:bg-forest-800'
                   }`}
                 >
-                  <Heart className="w-4 h-4 mr-2" />
-                  Saved Farms
+                  <User className="w-4 h-4 mr-2" />
+                  Profile
                 </Link>
+
+                <button
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                  className="flex items-center px-4 py-2 rounded-lg font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoggingOut ? (
+                    <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin mr-2"></div>
+                  ) : (
+                    <LogOut className="w-4 h-4 mr-2" />
+                  )}
+                  {isLoggingOut ? 'Signing out...' : 'Logout'}
+                </button>
               </>
             )}
           </div>
