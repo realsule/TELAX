@@ -27,7 +27,7 @@ from werkzeug.security import generate_password_hash
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'app'))
 
 from app import create_app, db
-from app.models import User, Listing, Order, Review, Category, Event, Donation, EventParticipant, DonationClaim
+from app.models import User, Listing, Order, Event, Donation, EventParticipant, DonationClaim
 
 def create_demo_data():
     """Create realistic demo data for TELAX platform"""
@@ -39,35 +39,13 @@ def create_demo_data():
         
         # Clear existing data (optional - uncomment for clean slate)
         # Order.query.delete()
-        # Review.query.delete()
         # Listing.query.delete()
         # User.query.filter(User.role != 'super_admin').delete()
-        # Category.query.delete()
         # Event.query.delete()
         # Donation.query.delete()
         # EventParticipant.query.delete()
         # DonationClaim.query.delete()
         # db.session.commit()
-        
-        # Create categories
-        categories_data = [
-            {'name': 'Vegetables', 'description': 'Fresh vegetables from local farms'},
-            {'name': 'Fruits', 'description': 'Seasonal fruits and berries'},
-            {'name': 'Dairy & Eggs', 'description': 'Fresh dairy products and eggs'},
-            {'name': 'Herbs', 'description': 'Aromatic herbs and spices'},
-            {'name': 'Grains', 'description': 'Whole grains and cereals'},
-            {'name': 'Poultry', 'description': 'Free-range and organic poultry'},
-            {'name': 'Legumes', 'description': 'Beans, peas, and lentils'}
-        ]
-        
-        for cat_data in categories_data:
-            existing = Category.query.filter_by(name=cat_data['name']).first()
-            if not existing:
-                category = Category(**cat_data)
-                db.session.add(category)
-        
-        db.session.commit()
-        print("✅ Categories created")
         
         # Create demo users
         users_data = [
@@ -192,6 +170,9 @@ def create_demo_data():
                 db.session.add(user)
                 db.session.flush()  # Get the ID without committing
                 created_users[user_data['email']] = user
+            else:
+                # Use existing user
+                created_users[user_data['email']] = existing
         
         db.session.commit()
         print("✅ Users created")
@@ -202,10 +183,9 @@ def create_demo_data():
             {
                 'title': 'Organic Sukuma Wiki',
                 'description': 'Fresh, locally grown sukuma wiki (collard greens) grown without pesticides. Perfect for traditional Kenyan dishes.',
-                'price': 50.00,
+                'price_per_unit': 50.00,
                 'unit': 'bunch',
-                'quantity': 100,
-                'category': 'Vegetables',
+                'quantity_available': 100,
                 'farmer_email': 'john@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-1576072780543-9399?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -213,10 +193,9 @@ def create_demo_data():
             {
                 'title': 'Fresh Kale',
                 'description': 'Nutrient-rich kale, perfect for smoothies and healthy meals. Grown using organic farming methods.',
-                'price': 60.00,
+                'price_per_unit': 60.00,
                 'unit': 'bunch',
-                'quantity': 80,
-                'category': 'Vegetables',
+                'quantity_available': 80,
                 'farmer_email': 'mary@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-1576072780543-9399?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -224,10 +203,9 @@ def create_demo_data():
             {
                 'title': 'Hydroponic Tomatoes',
                 'description': 'Juicy red tomatoes grown using hydroponic technology. No soil, no pesticides, just pure flavor.',
-                'price': 120.00,
+                'price_per_unit': 120.00,
                 'unit': 'kg',
-                'quantity': 50,
-                'category': 'Vegetables',
+                'quantity_available': 50,
                 'farmer_email': 'john@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-1592925014522-bd8d-1f0d-3ad48-bf49ab054e39?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -235,10 +213,9 @@ def create_demo_data():
             {
                 'title': 'Fresh Spinach',
                 'description': 'Tender spinach leaves, rich in iron and vitamins. Perfect for salads and traditional Kenyan cuisine.',
-                'price': 35.00,
+                'price_per_unit': 35.00,
                 'unit': 'bunch',
-                'quantity': 120,
-                'category': 'Vegetables',
+                'quantity_available': 120,
                 'farmer_email': 'mary@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-1576072780543-9399?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -246,11 +223,10 @@ def create_demo_data():
             # Fruits
             {
                 'title': 'Mangoes - Tommy Atkins',
-                'description': 'Sweet, juicy mangoes from the famous Tommy Atkins variety. Grown in Embu with perfect ripeness.',
-                'price': 80.00,
+                'description': 'Sweet, juicy mangoes from famous Tommy Atkins variety. Grown in Embu with perfect ripeness.',
+                'price_per_unit': 80.00,
                 'unit': 'kg',
-                'quantity': 60,
-                'category': 'Fruits',
+                'quantity_available': 60,
                 'farmer_email': 'john@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-15532797125-e4396e53e876?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -258,10 +234,9 @@ def create_demo_data():
             {
                 'title': 'Passion Fruits',
                 'description': 'Fresh passion fruits grown in Thika. Sweet and tangy, perfect for juices and desserts.',
-                'price': 150.00,
+                'price_per_unit': 150.00,
                 'unit': 'kg',
-                'quantity': 40,
-                'category': 'Fruits',
+                'quantity_available': 40,
                 'farmer_email': 'mary@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-1618894934361-321de326cc97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -269,10 +244,9 @@ def create_demo_data():
             {
                 'title': 'Bananas - Local Variety',
                 'description': 'Sweet bananas from Murang\'a. Grown sustainably without chemical fertilizers.',
-                'price': 25.00,
+                'price_per_unit': 25.00,
                 'unit': 'bunch',
-                'quantity': 200,
-                'category': 'Fruits',
+                'quantity_available': 200,
                 'farmer_email': 'john@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-1543316286-ad9a994ab4ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -281,10 +255,9 @@ def create_demo_data():
             {
                 'title': 'Free-Range Indigenous Chicken',
                 'description': 'Locally raised indigenous chicken, free-range and organic feed. Rich flavor and high nutritional value.',
-                'price': 800.00,
+                'price_per_unit': 800.00,
                 'unit': 'piece',
-                'quantity': 30,
-                'category': 'Poultry',
+                'quantity_available': 30,
                 'farmer_email': 'mary@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-1567307449-6673-849961a934e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -292,10 +265,9 @@ def create_demo_data():
             {
                 'title': 'Farm Fresh Eggs',
                 'description': 'Fresh eggs from free-range chickens. Collected daily and delivered with care.',
-                'price': 450.00,
+                'price_per_unit': 450.00,
                 'unit': 'dozen',
-                'quantity': 50,
-                'category': 'Dairy & Eggs',
+                'quantity_available': 50,
                 'farmer_email': 'john@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-1518569032508-6a9e4c8a5a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -303,10 +275,9 @@ def create_demo_data():
             {
                 'title': 'Fresh Cow Milk',
                 'description': 'Pure, fresh cow milk from local dairy farm. No preservatives or additives.',
-                'price': 120.00,
+                'price_per_unit': 120.00,
                 'unit': 'liter',
-                'quantity': 40,
-                'category': 'Dairy & Eggs',
+                'quantity_available': 40,
                 'farmer_email': 'mary@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-1550583845-0eab7-4b4a-a2d0-a8ad2426a85?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -315,10 +286,9 @@ def create_demo_data():
             {
                 'title': 'Maize - White Corn',
                 'description': 'High-quality white maize from Kitale. Perfect for ugali and traditional Kenyan dishes.',
-                'price': 45.00,
+                'price_per_unit': 45.00,
                 'unit': 'kg',
-                'quantity': 200,
-                'category': 'Grains',
+                'quantity_available': 200,
                 'farmer_email': 'john@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-1596475036122-e746c12f6ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -326,10 +296,9 @@ def create_demo_data():
             {
                 'title': 'Green Grams (Ndengu)',
                 'description': 'Fresh green grams (ndengu) from Machakos. Rich in protein and essential in Kenyan cuisine.',
-                'price': 180.00,
+                'price_per_unit': 180.00,
                 'unit': 'kg',
-                'quantity': 100,
-                'category': 'Legumes',
+                'quantity_available': 100,
                 'farmer_email': 'mary@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-1596475036122-e746c12f6ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -337,10 +306,9 @@ def create_demo_data():
             {
                 'title': 'Kidney Beans (Njahi)',
                 'description': 'Premium kidney beans from Nakuru. Perfect for githeri and stews.',
-                'price': 220.00,
+                'price_per_unit': 220.00,
                 'unit': 'kg',
-                'quantity': 150,
-                'category': 'Legumes',
+                'quantity_available': 150,
                 'farmer_email': 'john@telax.com',
                 'is_available': True,
                 'image_url': 'https://images.unsplash.com/photo-1596475036122-e746c12f6ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MZ&auto=format&fit=crop&w=800&q=80'
@@ -348,18 +316,15 @@ def create_demo_data():
         ]
         
         for listing_data in listings_data:
-            category = Category.query.filter_by(name=listing_data['category']).first()
-            if category:
-                # Remove farmer_email from listing_data as it's a relationship
-                listing_data_copy = listing_data.copy()
-                listing_data_copy.pop('farmer_email')
-                
-                listing = Listing(
-                    farmer_id=created_users[listing_data['farmer_email']].id,
-                    category_id=category.id,
-                    **listing_data_copy
-                )
-                db.session.add(listing)
+            # Remove farmer_email from listing_data as it's a relationship
+            listing_data_copy = listing_data.copy()
+            listing_data_copy.pop('farmer_email')
+            
+            listing = Listing(
+                farmer_id=created_users[listing_data['farmer_email']].id,
+                **listing_data_copy
+            )
+            db.session.add(listing)
         
         db.session.commit()
         print("✅ Listings created")
@@ -374,8 +339,7 @@ def create_demo_data():
                 'total_price': 100.00,
                 'status': 'delivered',
                 'delivery_address': 'Westlands, Nairobi',
-                'notes': 'Delivered on time, very fresh!',
-                'payment_method': 'pod'
+                'notes': 'Delivered on time, very fresh!'
             },
             {
                 'buyer_id': created_users['bob@telax.com'].id,
@@ -385,8 +349,7 @@ def create_demo_data():
                 'total_price': 180.00,
                 'status': 'confirmed',
                 'delivery_address': 'Kilimani, Nairobi',
-                'notes': 'Please deliver after 5 PM',
-                'payment_method': 'pod'
+                'notes': 'Please deliver after 5 PM'
             },
             {
                 'buyer_id': created_users['alice@telax.com'].id,
@@ -396,8 +359,7 @@ def create_demo_data():
                 'total_price': 120.00,
                 'status': 'pending',
                 'delivery_address': 'Kasarani, Nairobi',
-                'notes': 'Customer requested ripe tomatoes',
-                'payment_method': 'pod'
+                'notes': 'Customer requested ripe tomatoes'
             }
         ]
         
@@ -407,35 +369,6 @@ def create_demo_data():
         
         db.session.commit()
         print("✅ Orders created")
-        
-        # Create sample reviews
-        reviews_data = [
-            {
-                'listing_id': 1,  # Organic Sukuma Wiki
-                'buyer_id': created_users['alice@telax.com'].id,
-                'rating': 5,
-                'comment': 'Excellent quality! Very fresh and lasted for over a week. Will definitely order again.'
-            },
-            {
-                'listing_id': 2,  # Fresh Kale
-                'buyer_id': created_users['bob@telax.com'].id,
-                'rating': 4,
-                'comment': 'Good quality kale, but could be fresher. Overall satisfied with the purchase.'
-            },
-            {
-                'listing_id': 3,  # Hydroponic Tomatoes
-                'buyer_id': created_users['alice@telax.com'].id,
-                'rating': 5,
-                'comment': 'Amazing tomatoes! So flavorful and perfectly ripe. Worth every shilling!'
-            }
-        ]
-        
-        for review_data in reviews_data:
-            review = Review(**review_data)
-            db.session.add(review)
-        
-        db.session.commit()
-        print("✅ Reviews created")
         
         # Create sample events for institutions
         if created_users['admin@nairobi-school.ac.ke'] and created_users['admin@kenya-university.ac.ke']:

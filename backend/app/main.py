@@ -14,6 +14,9 @@ def create_app(config_object=None):
     """
     app = Flask(__name__)
     
+    # Bulletproof CORS configuration - immediately after Flask app init
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}}, supports_credentials=True, allow_headers=["Content-Type", "Authorization"], methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
+    
     # Load configuration
     if config_object:
         if isinstance(config_object, dict):
@@ -49,9 +52,19 @@ def configure_app(app):
     # Basic Flask configuration
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
     
-    # Database configuration
-    database_url = os.environ.get('DATABASE_URL', 'sqlite:///telax.db')
+    # Database configuration - prioritize Supabase PostgreSQL
+    database_url = os.environ.get('DATABASE_URL', 'sqlite:///telax_dev.db')
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    
+    if database_url.startswith('postgresql://'):
+        # PostgreSQL configuration for Supabase
+        app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+            'pool_pre_ping': True,
+            'pool_recycle': 300,
+        }
+    else:
+        # SQLite for development
+        app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     # JWT configuration
@@ -59,33 +72,6 @@ def configure_app(app):
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
     app.config['JWT_ALGORITHM'] = 'HS256'
-    
-    # CORS configuration - Allow specific local development origins
-    if app.config.get('DEBUG', False):
-        # Development: Allow specific local origins with full preflight support
-        allowed_origins = [
-            'http://localhost:5173',
-            'http://localhost:5174', 
-            'http://localhost:5175',
-            'http://127.0.0.1:5173',
-            'http://127.0.0.1:5174',
-            'http://127.0.0.1:5175'
-        ]
-        CORS(app, 
-             origins=allowed_origins,
-             supports_credentials=True,
-             allow_headers=['Content-Type', 'Authorization', 'X-Requested-With'],
-             methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-             expose_headers=['Content-Type', 'Authorization'])
-    else:
-        # Production: Restrict to specific origins
-        cors_origins = app.config.get('CORS_ORIGINS', ['http://localhost:5173'])
-        CORS(app, 
-             origins=cors_origins,
-             supports_credentials=True,
-             allow_headers=['Content-Type', 'Authorization', 'X-Requested-With'],
-             methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-             expose_headers=['Content-Type', 'Authorization'])
     
     # Development/Production settings
     app.config['DEBUG'] = os.environ.get('FLASK_DEBUG', 'True').lower() == 'true'
@@ -95,8 +81,13 @@ def initialize_extensions(app):
     """
     Initialize Flask extensions.
     """
-    # Initialize SQLAlchemy
-    db.init_app(app)
+    # Initialize SQLAlchemy with engine options for PostgreSQL
+    if app.config.get('SQLALCHEMY_DATABASE_URI', '').startswith('postgresql://'):
+        engine_options = app.config.get('SQLALCHEMY_ENGINE_OPTIONS', {})
+        app.config['SQLALCHEMY_ENGINE_OPTIONS'] = engine_options
+        db.init_app(app)
+    else:
+        db.init_app(app)
     
     # Initialize JWT Manager
     jwt = JWTManager(app)
@@ -137,6 +128,34 @@ def register_blueprints(app):
             'message': 'TELAX API is running',
             'version': '1.0.0'
         }
+    
+    # Database health check endpoint
+    @app.route('/api/db-check', methods=['GET'])
+    def db_health_check():
+        try:
+            # Test database connection with simple query using SQLAlchemy text()
+            from sqlalchemy import text
+            result = db.session.execute(text('SELECT 1')).fetchone()
+            if result and result[0] == 1:
+                return {
+                    'status': 'ok',
+                    'database': 'connected',
+                    'message': 'Database connection is healthy',
+                    'database_url': app.config.get('SQLALCHEMY_DATABASE_URI', 'Not configured')
+                }, 200
+            else:
+                return {
+                    'status': 'error',
+                    'database': 'disconnected',
+                    'message': 'Database query failed'
+                }, 500
+        except Exception as e:
+            return {
+                'status': 'error',
+                'database': 'disconnected',
+                'message': f'Database connection failed: {str(e)}',
+                'database_url': app.config.get('SQLALCHEMY_DATABASE_URI', 'Not configured')
+            }, 500
 
 def register_error_handlers(app):
     """
